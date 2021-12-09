@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "736010385681",
+    "project_id": "duantotnghiep-73075",
+    "storage_bucket": "duantotnghiep-73075.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:736010385681:android:65ae6ab29c4e9ab2b074b0",
+        "android_client_info": {
+          "package_name": "com.example.e_commerce"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "736010385681-ftm2mhv5ub1jt1bj30bb3d2fkq13nlgn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1UzLtf3pYhWliUGHd8Q00J6Fh_VEaNsI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "736010385681-ftm2mhv5ub1jt1bj30bb3d2fkq13nlgn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:736010385681:android:198ede0c84feb6a0b074b0",
+        "android_client_info": {
+          "package_name": "com.example.shopthethao"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "736010385681-ftm2mhv5ub1jt1bj30bb3d2fkq13nlgn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1UzLtf3pYhWliUGHd8Q00J6Fh_VEaNsI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "736010385681-ftm2mhv5ub1jt1bj30bb3d2fkq13nlgn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
