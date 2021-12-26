@@ -3,12 +3,15 @@ import 'package:e_commerce/model/cartmodel.dart';
 
 import 'package:e_commerce/provider/product_provider.dart';
 import 'package:e_commerce/screens/homepage.dart';
+import 'package:e_commerce/services.dart';
 import 'package:e_commerce/widgets/checkout_singleproduct.dart';
 import 'package:e_commerce/widgets/mybutton.dart';
 import 'package:e_commerce/widgets/notification_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:future_progress_dialog/future_progress_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:stripe_payment/stripe_payment.dart';
 
 class CheckOut extends StatefulWidget {
   @override
@@ -22,7 +25,7 @@ class _CheckOutState extends State<CheckOut> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   ProductProvider productProvider;
-
+  PaymentMethod paymentMethod;
   Widget _buildBottomSingleDetail({String startName, String endName}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -42,6 +45,21 @@ class _CheckOutState extends State<CheckOut> {
   User user;
   double total;
   List<CartModel> myList;
+  Future<bool> PayWithCard({int amount}) async {
+    var response = await PaymentService()
+        .createPaymentMEthod(amount: amount.toString());
+    print("/////===> ${response.mess}");
+    if(response.success==true){
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text(response.mess),
+        duration: Duration(seconds: response.success == true ? 3 : 5),
+      ));
+      return true;
+    }else{
+      return false;
+    }
+
+  }
 
   Widget _buildButton() {
     return Column(
@@ -50,38 +68,52 @@ class _CheckOutState extends State<CheckOut> {
         height: 50,
         child: MyButton(
           name: "Buy",
-          onPressed: () {
-            if (productProvider.getCheckOutModelList.isNotEmpty) {
-              FirebaseFirestore.instance.collection("Order").add({
-                "Product": productProvider.getCheckOutModelList
-                    .map((c) => {
-                          "ProductName": c.name,
-                          "ProductPrice": c.price,
-                          "ProductQuetity": c.quentity,
-                          "ProductImage": c.image,
-                          "Product Color": c.color,
-                          "Product Size": c.size,
-                        })
-                    .toList(),
-                "TotalPrice": total.toStringAsFixed(2),
-                "UserName": e.userName,
-                "UserEmail": e.userEmail,
-                "UserNumber": e.userPhoneNumber,
-                "UserAddress": e.userAddress,
-                "UserId": user.uid,
-              });
-              setState(() {
-                myList.clear();
-              });
+          onPressed: () async {
+            double amountcell= total *1000;
+            int intergerTotal=(amountcell/10).ceil();
+            PayWithCard(amount: intergerTotal).then((value) {
 
-              productProvider.addNotification("Notification");
-            } else {
-              _scaffoldKey.currentState.showSnackBar(
-                SnackBar(
-                  content: Text("No Item Yet"),
-                ),
-              );
-            }
+              if(value==true){
+                if (productProvider.getCheckOutModelList.isNotEmpty) {
+                  FirebaseFirestore.instance.collection("Order").add({
+                    "Product": productProvider.getCheckOutModelList
+                        .map((c) => {
+                      "ProductName": c.name,
+                      "ProductPrice": c.price,
+                      "ProductQuetity": c.quentity,
+                      "ProductImage": c.image,
+                      "Product Color": c.color,
+                      "Product Size": c.size,
+                    })
+                        .toList(),
+                    "TotalPrice": total.toStringAsFixed(2),
+                    "UserName": e.userName,
+                    "UserEmail": e.userEmail,
+                    "UserNumber": e.userPhoneNumber,
+                    "UserAddress": e.userAddress,
+                    "UserId": user.uid,
+                  });
+                  setState(() {
+                    myList.clear();
+                  });
+
+                  productProvider.addNotification("Notification");
+                } else {
+                  _scaffoldKey.currentState.showSnackBar(
+                    SnackBar(
+                      content: Text("No Item Yet"),
+                    ),
+                  );
+                }
+              }else{
+                _scaffoldKey.currentState.showSnackBar(SnackBar(
+                  content: Text("Transaction failded"),
+                  duration: Duration(seconds: 5),
+                ));
+              }
+            });
+            // print(paymentMethod.id);
+
           },
         ),
       );
@@ -92,6 +124,7 @@ class _CheckOutState extends State<CheckOut> {
   void initState() {
     productProvider = Provider.of<ProductProvider>(context, listen: false);
     myList = productProvider.checkOutModelList;
+    PaymentService.init();
     super.initState();
   }
 
