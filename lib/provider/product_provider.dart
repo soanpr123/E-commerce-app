@@ -39,7 +39,9 @@ class ProductProvider with ChangeNotifier {
   List<UserModel> get getUserModelList {
     return userModelList;
   }
-
+ UserModel get getUserModel {
+    return userModel;
+  }
   void deleteCheckoutProduct(int index) {
     checkOutModelList.removeAt(index);
     notifyListeners();

@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce/screens/checkout.dart';
 import 'package:e_commerce/screens/homepage.dart';
 import 'package:e_commerce/widgets/mybutton.dart';
 import 'package:e_commerce/widgets/notification_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import '../provider/product_provider.dart';
@@ -299,6 +301,24 @@ class _DetailScreenState extends State<DetailScreen> {
             price: widget.price,
             quentity: count,
           );
+          FirebaseFirestore.instance.collection("cart").doc("${ FirebaseAuth.instance.currentUser.uid}").set({
+            "Product": productProvider.getCheckOutModelList
+                .map((c) => {
+              "ProductName": c.name,
+              "ProductPrice": c.price,
+              "ProductQuetity": c.quentity,
+              "ProductImage": c.image,
+              "Product Color": c.color,
+              "Product Size": c.size,
+            })
+                .toList(),
+            "TotalPrice": widget.price.toStringAsFixed(2),
+            "UserName": productProvider.userModel.userName,
+            "UserEmail":  productProvider.userModel.userEmail,
+            "UserNumber":  productProvider.userModel.userPhoneNumber,
+            "UserAddress":  productProvider.userModel.userAddress,
+            "UserId": FirebaseAuth.instance.currentUser.uid,
+          });
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (ctx) => CheckOut(),

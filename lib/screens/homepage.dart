@@ -4,6 +4,7 @@ import 'package:e_commerce/screens/about.dart';
 import 'package:e_commerce/screens/checkout.dart';
 
 import 'package:e_commerce/screens/contactus.dart';
+import 'package:e_commerce/screens/history_page.dart';
 import 'package:e_commerce/screens/login.dart';
 
 import 'package:e_commerce/screens/profilescreen.dart';
@@ -98,7 +99,7 @@ class _HomePageState extends State<HomePage> {
               });
             },
             leading: Icon(Icons.home),
-            title: Text("Home"),
+            title: Text("Trang chủ"),
           ),
           ListTile(
             selected: checkoutColor,
@@ -114,7 +115,23 @@ class _HomePageState extends State<HomePage> {
                   MaterialPageRoute(builder: (ctx) => CheckOut()));
             },
             leading: Icon(Icons.shopping_cart),
-            title: Text("Checkout"),
+            title: Text("Giỏ hàng"),
+          ),
+          ListTile(
+            selected: checkoutColor,
+            onTap: () {
+              setState(() {
+                checkoutColor = true;
+                contactUsColor = false;
+                homeColor = false;
+                profileColor = false;
+                aboutColor = false;
+              });
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (ctx) => HistoryPage()));
+            },
+            leading: Icon(Icons.shopping_cart),
+            title: Text("Lịch sử mua hàng"),
           ),
           ListTile(
             selected: aboutColor,
@@ -130,7 +147,7 @@ class _HomePageState extends State<HomePage> {
                   MaterialPageRoute(builder: (ctx) => About()));
             },
             leading: Icon(Icons.info),
-            title: Text("About"),
+            title: Text("Thông tin"),
           ),
           ListTile(
             selected: profileColor,
@@ -149,7 +166,7 @@ class _HomePageState extends State<HomePage> {
               );
             },
             leading: Icon(Icons.info),
-            title: Text("Profile"),
+            title: Text("Cá nhân"),
           ),
           ListTile(
             selected: contactUsColor,
@@ -165,14 +182,14 @@ class _HomePageState extends State<HomePage> {
                   MaterialPageRoute(builder: (ctx) => ContactUs()));
             },
             leading: Icon(Icons.phone),
-            title: Text("Contant Us"),
+            title: Text("Liên hệ"),
           ),
           ListTile(
             onTap: () {
               FirebaseAuth.instance.signOut();
             },
             leading: Icon(Icons.exit_to_app),
-            title: Text("Logout"),
+            title: Text("Đăng xuất"),
           ),
         ],
       ),
@@ -204,7 +221,7 @@ class _HomePageState extends State<HomePage> {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (ctx) => ListProduct(
-                name: "Dress",
+                name: "Áo dài",
                 snapShot: dress,
               ),
             ),
@@ -225,7 +242,7 @@ class _HomePageState extends State<HomePage> {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (ctx) => ListProduct(
-                name: "Shirt",
+                name: "Áo",
                 snapShot: shirts,
               ),
             ),
@@ -246,7 +263,7 @@ class _HomePageState extends State<HomePage> {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (ctx) => ListProduct(
-                name: "Shoes",
+                name: "Giày",
                 snapShot: shoes,
               ),
             ),
@@ -270,7 +287,7 @@ class _HomePageState extends State<HomePage> {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (ctx) => ListProduct(
-                name: "Pant",
+                name: "Quần",
                 snapShot: pant,
               ),
             ),
@@ -294,7 +311,7 @@ class _HomePageState extends State<HomePage> {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (ctx) => ListProduct(
-                name: "Tie",
+                name: "Cà vạt",
                 snapShot: tie,
               ),
             ),
@@ -317,7 +334,7 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                "Categorie",
+                "Danh mục",
                 style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
               ),
             ],
@@ -351,7 +368,7 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
-              "Featured",
+              "Sản phẩm hot",
               style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
             ),
             GestureDetector(
@@ -359,7 +376,7 @@ class _HomePageState extends State<HomePage> {
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
                     builder: (ctx) => ListProduct(
-                      name: "Featured",
+                      name: "Sản phẩm hot",
                       isCategory: false,
                       snapShot: featureProduct,
                     ),
@@ -367,7 +384,7 @@ class _HomePageState extends State<HomePage> {
                 );
               },
               child: Text(
-                "View more",
+                "Xem thêm",
                 style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
               ),
             )
@@ -435,7 +452,7 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    "New Achives",
+                    "Sản phẩm mới",
                     style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                   ),
                   GestureDetector(
@@ -451,7 +468,7 @@ class _HomePageState extends State<HomePage> {
                       );
                     },
                     child: Text(
-                      "View more",
+                      "Xem thêm",
                       style:
                           TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                     ),
@@ -542,7 +559,7 @@ class _HomePageState extends State<HomePage> {
       drawer: _buildMyDrawer(),
       appBar: AppBar(
         title: Text(
-          "HomePage",
+          "Trang chủ",
           style: TextStyle(color: Colors.black),
         ),
         centerTitle: true,

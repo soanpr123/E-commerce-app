@@ -67,7 +67,7 @@ class _CheckOutState extends State<CheckOut> {
       return Container(
         height: 50,
         child: MyButton(
-          name: "Buy",
+          name: "Thanh toán",
           onPressed: () async {
             double amountcell= total *1000;
             int intergerTotal=(amountcell/10).ceil();
@@ -161,7 +161,7 @@ class _CheckOutState extends State<CheckOut> {
         key: _scaffoldKey,
         appBar: AppBar(
           centerTitle: true,
-          title: Text("CheckOut Page", style: TextStyle(color: Colors.black)),
+          title: Text("Giỏ hàng", style: TextStyle(color: Colors.black)),
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           leading: IconButton(
@@ -218,19 +218,19 @@ class _CheckOutState extends State<CheckOut> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       _buildBottomSingleDetail(
-                        startName: "Subtotal",
+                        startName: "Tổng sản phẩm",
                         endName: "\$ ${subTotal.toStringAsFixed(2)}",
                       ),
                       _buildBottomSingleDetail(
-                        startName: "Discount",
+                        startName: "Giảm giá",
                         endName: "${discount.toStringAsFixed(2)}%",
                       ),
                       _buildBottomSingleDetail(
-                        startName: "Shipping",
+                        startName: "Phí vận chuyển",
                         endName: "\$ ${shipping.toStringAsFixed(2)}",
                       ),
                       _buildBottomSingleDetail(
-                        startName: "Total",
+                        startName: "Tổng thanh toán",
                         endName: "\$ ${total.toStringAsFixed(2)}",
                       ),
                     ],

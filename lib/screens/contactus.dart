@@ -108,10 +108,10 @@ class _ContactUsState extends State<ContactUs> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
-                "Sent Us Your Message",
+                "Gửi cho chúng tôi phản hồi của bạn",
                 style: TextStyle(
                   color: Color(0xff746bc9),
-                  fontSize: 28,
+                  fontSize: 20,
                 ),
               ),
               _buildSingleFlied(name: name),
@@ -130,7 +130,7 @@ class _ContactUsState extends State<ContactUs> {
                 ),
               ),
               MyButton(
-                name: "Submit",
+                name: "gửi",
                 onPressed: () {
                   vaildation();
                 },

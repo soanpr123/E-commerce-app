@@ -113,7 +113,7 @@ class _LoginState extends State<Login> {
             Column(
               children: <Widget>[
                 Text(
-                  "Login",
+                  "Đăng nhập",
                   style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
@@ -145,7 +145,7 @@ class _LoginState extends State<Login> {
                         onPressed: () {
                           vaildation();
                         },
-                        name: "Login",
+                        name: "Đăng nhập",
                       )
                     : Center(
                         child: CircularProgressIndicator(),
@@ -154,8 +154,8 @@ class _LoginState extends State<Login> {
                   height: 10,
                 ),
                 ChangeScreen(
-                    name: "SignUp",
-                    whichAccount: "I Have Not Account!",
+                    name: "Đăng kí",
+                    whichAccount: "Bạn chưa có tài khoản !",
                     onTap: () {
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
