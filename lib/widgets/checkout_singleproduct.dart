@@ -1,4 +1,5 @@
 import 'package:e_commerce/provider/product_provider.dart';
+import 'package:e_commerce/widgets/utils.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -130,7 +131,7 @@ class _CheckOutSingleProductState extends State<CheckOutSingleProduct> {
                         _buildNameAndClosePart(),
                         _buildColorAndSizePart(),
                         Text(
-                          "\$${widget.price.toStringAsFixed(2)}",
+                          "${numberFormat(widget.price.toInt())} vnđ",
                           style: TextStyle(
                               color: Color(0xff9b96d6),
                               fontSize: 18,

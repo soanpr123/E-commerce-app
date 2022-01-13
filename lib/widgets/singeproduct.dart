@@ -1,3 +1,4 @@
+import 'package:e_commerce/widgets/utils.dart';
 import 'package:flutter/material.dart';
 
 class SingleProduct extends StatelessWidget {
@@ -35,7 +36,7 @@ class SingleProduct extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    "\$ ${price.toString()}",
+                    "${numberFormat(price.toInt())} vnđ",
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 17,

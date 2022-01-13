@@ -118,22 +118,6 @@ class _HomePageState extends State<HomePage> {
             title: Text("Giỏ hàng"),
           ),
           ListTile(
-            selected: checkoutColor,
-            onTap: () {
-              setState(() {
-                checkoutColor = true;
-                contactUsColor = false;
-                homeColor = false;
-                profileColor = false;
-                aboutColor = false;
-              });
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (ctx) => HistoryPage()));
-            },
-            leading: Icon(Icons.shopping_cart),
-            title: Text("Lịch sử mua hàng"),
-          ),
-          ListTile(
             selected: aboutColor,
             onTap: () {
               setState(() {
@@ -404,6 +388,7 @@ class _HomePageState extends State<HomePage> {
                               image: e.image,
                               price: e.price,
                               name: e.name,
+                              description: e.description,
                             ),
                           ),
                         );
@@ -420,7 +405,11 @@ class _HomePageState extends State<HomePage> {
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
                           builder: (ctx) => DetailScreen(
-                              image: e.image, price: e.price, name: e.name),
+                            image: e.image,
+                            price: e.price,
+                            name: e.name,
+                            description: e.description,
+                          ),
                         ),
                       );
                     },
@@ -508,7 +497,11 @@ class _HomePageState extends State<HomePage> {
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
                           builder: (ctx) => DetailScreen(
-                              image: e.image, price: e.price, name: e.name),
+                            image: e.image,
+                            price: e.price,
+                            name: e.name,
+                            description: e.description,
+                          ),
                         ),
                       );
                     },

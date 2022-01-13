@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce/model/cartmodel.dart';
+import 'package:e_commerce/model/usermodel.dart';
 
 import 'package:e_commerce/provider/product_provider.dart';
 import 'package:e_commerce/screens/homepage.dart';
@@ -7,9 +10,13 @@ import 'package:e_commerce/services.dart';
 import 'package:e_commerce/widgets/checkout_singleproduct.dart';
 import 'package:e_commerce/widgets/mybutton.dart';
 import 'package:e_commerce/widgets/notification_button.dart';
+import 'package:e_commerce/widgets/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:future_progress_dialog/future_progress_dialog.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 
@@ -46,19 +53,18 @@ class _CheckOutState extends State<CheckOut> {
   double total;
   List<CartModel> myList;
   Future<bool> PayWithCard({int amount}) async {
-    var response = await PaymentService()
-        .createPaymentMEthod(amount: amount.toString());
+    var response =
+        await PaymentService().createPaymentMEthod(amount: amount.toString());
     print("/////===> ${response.mess}");
-    if(response.success==true){
+    if (response.success == true) {
       _scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text(response.mess),
         duration: Duration(seconds: response.success == true ? 3 : 5),
       ));
       return true;
-    }else{
+    } else {
       return false;
     }
-
   }
 
   Widget _buildButton() {
@@ -68,56 +74,201 @@ class _CheckOutState extends State<CheckOut> {
         height: 50,
         child: MyButton(
           name: "Thanh toán",
-          onPressed: () async {
-            double amountcell= total *1000;
-            int intergerTotal=(amountcell/10).ceil();
-            PayWithCard(amount: intergerTotal).then((value) {
-
-              if(value==true){
-                if (productProvider.getCheckOutModelList.isNotEmpty) {
-                  FirebaseFirestore.instance.collection("Order").add({
-                    "Product": productProvider.getCheckOutModelList
-                        .map((c) => {
-                      "ProductName": c.name,
-                      "ProductPrice": c.price,
-                      "ProductQuetity": c.quentity,
-                      "ProductImage": c.image,
-                      "Product Color": c.color,
-                      "Product Size": c.size,
-                    })
-                        .toList(),
-                    "TotalPrice": total.toStringAsFixed(2),
-                    "UserName": e.userName,
-                    "UserEmail": e.userEmail,
-                    "UserNumber": e.userPhoneNumber,
-                    "UserAddress": e.userAddress,
-                    "UserId": user.uid,
-                  });
-                  setState(() {
-                    myList.clear();
-                  });
-
-                  productProvider.addNotification("Notification");
-                } else {
-                  _scaffoldKey.currentState.showSnackBar(
-                    SnackBar(
-                      content: Text("No Item Yet"),
-                    ),
+          onPressed: myList.length == 0
+              ? null
+              : () {
+                  showCupertinoModalBottomSheet(
+                    expand: false,
+                    context: context,
+                    backgroundColor: Colors.transparent,
+                    builder: (context) => buildExercises(context, e),
                   );
-                }
-              }else{
-                _scaffoldKey.currentState.showSnackBar(SnackBar(
-                  content: Text("Transaction failded"),
-                  duration: Duration(seconds: 5),
-                ));
-              }
-            });
-            // print(paymentMethod.id);
 
-          },
+                  // print(paymentMethod.id);
+                },
         ),
       );
     }).toList());
+  }
+
+  Widget buildExercises(BuildContext context, UserModel e) {
+    return Material(
+      child: CupertinoPageScaffold(
+        navigationBar: CupertinoNavigationBar(
+          leading: Container(),
+          middle: Container(
+            height: 5,
+            width: 60,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+              color: Colors.grey,
+            ),
+          ),
+        ),
+        child: SafeArea(
+          bottom: true,
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  height: 16,
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "Hình thức thanh toán",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                Divider(
+                  height: 2,
+                  color: Colors.black,
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                Row(
+                  children: [
+                    InkWell(
+                      onTap: () async {
+                        Navigator.pop(context);
+                        ProgressDialog pr = ProgressDialog(context);
+                        pr.show();
+                        if (productProvider.getCheckOutModelList.isNotEmpty) {
+                          FirebaseFirestore.instance.collection("Order").add({
+                            "Product": productProvider.getCheckOutModelList
+                                .map((c) => {
+                                      "ProductName": c.name,
+                                      "ProductPrice": c.price,
+                                      "ProductQuetity": c.quentity,
+                                      "ProductImage": c.image,
+                                      "Product Color": c.color,
+                                      "Product Size": c.size,
+                                    })
+                                .toList(),
+                            "TotalPrice": total.toStringAsFixed(2),
+                            "UserName": e.userName,
+                            "UserEmail": e.userEmail,
+                            "UserNumber": e.userPhoneNumber,
+                            "UserAddress": e.userAddress,
+                            "UserId": user.uid,
+                            "status": "pendding",
+                            // "code": rand,
+                            "date": DateTime.now()
+                          }).then((value) {
+                            if (value != null) {
+                              setState(() {
+                                myList.clear();
+                              });
+                              pr.hide();
+                            }
+                          });
+
+                          productProvider.addNotification("Notification");
+                        } else {
+                          pr.hide();
+                          _scaffoldKey.currentState.showSnackBar(
+                            SnackBar(
+                              content: Text("No Item Yet"),
+                            ),
+                          );
+                        }
+                      },
+                      child: Text(
+                        "Thanh toán sau khi nhận hàng",
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.normal),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                Divider(
+                  height: 2,
+                  color: Colors.black,
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                Row(
+                  children: [
+                    InkWell(
+                      onTap: () async {
+                        Navigator.pop(context);
+                        ProgressDialog pr = ProgressDialog(context);
+                        pr.show();
+                        double amountcell = total * 1000;
+                        int intergerTotal = (amountcell / 10).ceil();
+                        PayWithCard(amount: intergerTotal).then((value) {
+                          if (value == true) {
+                            if (productProvider
+                                .getCheckOutModelList.isNotEmpty) {
+                              FirebaseFirestore.instance
+                                  .collection("Order")
+                                  .add({
+                                "Product": productProvider.getCheckOutModelList
+                                    .map((c) => {
+                                          "ProductName": c.name,
+                                          "ProductPrice": c.price,
+                                          "ProductQuetity": c.quentity,
+                                          "ProductImage": c.image,
+                                          "Product Color": c.color,
+                                          "Product Size": c.size,
+                                        })
+                                    .toList(),
+                                "TotalPrice": total.toStringAsFixed(2),
+                                "UserName": e.userName,
+                                "UserEmail": e.userEmail,
+                                "UserNumber": e.userPhoneNumber,
+                                "UserAddress": e.userAddress,
+                                "UserId": user.uid,
+                                "status": "successfully",
+                                "date": DateTime.now()
+                              });
+                              setState(() {
+                                myList.clear();
+                              });
+                              pr.hide();
+                              productProvider.addNotification("Notification");
+                            } else {
+                              pr.hide();
+                              _scaffoldKey.currentState.showSnackBar(
+                                SnackBar(
+                                  content: Text("No Item Yet"),
+                                ),
+                              );
+                            }
+                          } else {
+                            _scaffoldKey.currentState.showSnackBar(SnackBar(
+                              content: Text("Transaction failded"),
+                              duration: Duration(seconds: 5),
+                            ));
+                          }
+                        });
+                      },
+                      child: Text(
+                        "Thanh toán qua thẻ",
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.normal),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -219,19 +370,19 @@ class _CheckOutState extends State<CheckOut> {
                     children: <Widget>[
                       _buildBottomSingleDetail(
                         startName: "Tổng sản phẩm",
-                        endName: "\$ ${subTotal.toStringAsFixed(2)}",
+                        endName: "${numberFormat(subTotal.toInt())} vnđ",
                       ),
                       _buildBottomSingleDetail(
                         startName: "Giảm giá",
-                        endName: "${discount.toStringAsFixed(2)}%",
+                        endName: "${numberFormat(discount.toInt())} %",
                       ),
                       _buildBottomSingleDetail(
                         startName: "Phí vận chuyển",
-                        endName: "\$ ${shipping.toStringAsFixed(2)}",
+                        endName: " ${numberFormat(shipping.toInt())} vnđ",
                       ),
                       _buildBottomSingleDetail(
                         startName: "Tổng thanh toán",
-                        endName: "\$ ${total.toStringAsFixed(2)}",
+                        endName: " ${numberFormat(total.toInt())} vnđ",
                       ),
                     ],
                   ),

@@ -143,7 +143,8 @@ class CategoryProvider with ChangeNotifier {
         shirtData = Product(
             image: element.data()["image"],
             name: element.data()["name"],
-            price: element.data()["price"]);
+            price: double.parse(element.data()["price"].toString()),
+            description: element.data()['description']);
         newList.add(shirtData);
       },
     );
@@ -167,7 +168,8 @@ class CategoryProvider with ChangeNotifier {
         shirtData = Product(
             image: element.data()["image"],
             name: element.data()["name"],
-            price: element.data()["price"]);
+            price: double.parse(element.data()["price"].toString()),
+            description: element.data()['description']);
         newList.add(shirtData);
       },
     );
@@ -191,7 +193,8 @@ class CategoryProvider with ChangeNotifier {
         shirtData = Product(
             image: element.data()["image"],
             name: element.data()["name"],
-            price: element.data()["price"]);
+            price: double.parse(element.data()["price"].toString()),
+            description: element.data()['description']);
         newList.add(shirtData);
       },
     );
@@ -215,7 +218,8 @@ class CategoryProvider with ChangeNotifier {
         shirtData = Product(
             image: element.data()["image"],
             name: element.data()["name"],
-            price: element.data()["price"]);
+            price: double.parse(element.data()["price"].toString()),
+            description: element.data()['description']);
         newList.add(shirtData);
       },
     );
@@ -239,7 +243,8 @@ class CategoryProvider with ChangeNotifier {
         shirtData = Product(
             image: element.data()["image"],
             name: element.data()["name"],
-            price: element.data()["price"]);
+            price: double.parse(element.data()["price"].toString()),
+            description: element.data()['description']);
         newList.add(shirtData);
       },
     );

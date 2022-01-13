@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce/model/cartmodel.dart';
+import 'package:e_commerce/model/historyModel.dart';
 import 'package:e_commerce/model/product.dart';
 import 'package:e_commerce/model/usermodel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,8 +9,9 @@ import 'package:flutter/material.dart';
 
 class ProductProvider with ChangeNotifier {
   List<Product> feature = [];
+  List<HistoryProduct> history = [];
   Product featureData;
-
+  HistoryProduct historyData;
   List<CartModel> checkOutModelList = [];
   CartModel checkOutModel;
   List<UserModel> userModelList = [];
@@ -39,9 +41,11 @@ class ProductProvider with ChangeNotifier {
   List<UserModel> get getUserModelList {
     return userModelList;
   }
- UserModel get getUserModel {
+
+  UserModel get getUserModel {
     return userModel;
   }
+
   void deleteCheckoutProduct(int index) {
     checkOutModelList.removeAt(index);
     notifyListeners();
@@ -89,14 +93,40 @@ class ProductProvider with ChangeNotifier {
     featureSnapShot.docs.forEach(
       (element) {
         featureData = Product(
-            image: element.data()["image"],
-            name: element.data()["name"],
-            price: element.data()["price"]);
+          image: element.data()["image"],
+          name: element.data()["name"],
+          price: double.parse(element.data()["price"].toString()),
+          description: element.data()["description"],
+        );
+
         newList.add(featureData);
       },
     );
     feature = newList;
   }
+
+  // Future<void> getHistory() async {
+  //   List<HistoryProduct> newList = [];
+  //   QuerySnapshot featureSnapShot = await FirebaseFirestore.instance
+  //       .collection("products")
+  //       .doc("UhwQZY3X4WKjyr7LV8Sl")
+  //       .collection("featureproduct")
+  //       .get();
+  //   featureSnapShot.docs.forEach(
+  //     (element) {
+  //       historyData = HistoryProduct(
+  //         image: element.data()["image"],
+  //         name: element.data()["name"],
+  //         price: double.parse(element.data()["price"].toString()),
+  //         description: element.data()["description"],
+  //         status:  element.data()["status"]
+  //       );
+
+  //       newList.add(historyData);
+  //     },
+  //   );
+  //   history = newList;
+  // }
 
   List<Product> get getFeatureList {
     return feature;
@@ -111,9 +141,11 @@ class ProductProvider with ChangeNotifier {
     featureSnapShot.docs.forEach(
       (element) {
         featureData = Product(
-            image: element.data()["image"],
-            name: element.data()["name"],
-            price: element.data()["price"]);
+          image: element.data()["image"],
+          name: element.data()["name"],
+          price: double.parse(element.data()["price"].toString()),
+          description: element.data()["description"],
+        );
         newList.add(featureData);
       },
     );
@@ -134,9 +166,11 @@ class ProductProvider with ChangeNotifier {
     featureSnapShot.docs.forEach(
       (element) {
         featureData = Product(
-            image: element.data()["image"],
-            name: element.data()["name"],
-            price: element.data()["price"]);
+          image: element.data()["image"],
+          name: element.data()["name"],
+          price: double.parse(element.data()["price"].toString()),
+          description: element.data()["description"],
+        );
         newList.add(featureData);
       },
     );
@@ -160,9 +194,11 @@ class ProductProvider with ChangeNotifier {
     achivesSnapShot.docs.forEach(
       (element) {
         newAchivesData = Product(
-            image: element.data()["image"],
-            name: element.data()["name"],
-            price: element.data()["price"]);
+          image: element.data()["image"],
+          name: element.data()["name"],
+          price: double.parse(element.data()["price"].toString()),
+          description: element.data()["description"],
+        );
         newList.add(newAchivesData);
       },
     );

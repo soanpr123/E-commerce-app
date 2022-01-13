@@ -1,4 +1,4 @@
-import 'package:e_commerce/screens/forgot.dart';
+import 'package:e_commerce/screens/login.dart';
 import 'package:e_commerce/screens/signup.dart';
 import 'package:e_commerce/widgets/changescreen.dart';
 import 'package:e_commerce/widgets/mytextformField.dart';
@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../widgets/mybutton.dart';
 
-class Login extends StatefulWidget {
+class Forgot extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
 }
@@ -26,16 +26,19 @@ final TextEditingController password = TextEditingController();
 
 bool obserText = true;
 
-class _LoginState extends State<Login> {
+class _LoginState extends State<Forgot> {
   void submit(context) async {
     try {
       setState(() {
         isLoading = true;
       });
-      UserCredential result = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(
-              email: email.text, password: password.text);
-      print(result);
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email.text);
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+        content:
+            Text("1 đường dẫn đặt lại mật khẩu đã được gửi về mail của bạn"),
+        duration: Duration(milliseconds: 800),
+        backgroundColor: Theme.of(context).primaryColor,
+      ));
     } on PlatformException catch (error) {
       var message = "Please Check Your Internet Connection ";
       if (error.message != null) {
@@ -86,18 +89,6 @@ class _LoginState extends State<Login> {
           content: Text("Please Try Vaild Email"),
         ),
       );
-    } else if (password.text.isEmpty) {
-      _scaffoldKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text("Password Is Empty"),
-        ),
-      );
-    } else if (password.text.length < 8) {
-      _scaffoldKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text("Password  Is Too Short"),
-        ),
-      );
     } else {
       submit(context);
     }
@@ -114,7 +105,7 @@ class _LoginState extends State<Login> {
             Column(
               children: <Widget>[
                 Text(
-                  "Đăng nhập",
+                  "Quên mật khẩu",
                   style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
@@ -125,28 +116,14 @@ class _LoginState extends State<Login> {
                   controller: email,
                 ),
                 SizedBox(
-                  height: 10,
-                ),
-                PasswordTextFormField(
-                  obserText: obserText,
-                  name: "Password",
-                  controller: password,
-                  onTap: () {
-                    FocusScope.of(context).unfocus();
-                    setState(() {
-                      obserText = !obserText;
-                    });
-                  },
-                ),
-                SizedBox(
-                  height: 10,
+                  height: 16,
                 ),
                 isLoading == false
                     ? MyButton(
                         onPressed: () {
                           vaildation();
                         },
-                        name: "Đăng nhập",
+                        name: "Gửi",
                       )
                     : Center(
                         child: CircularProgressIndicator(),
@@ -155,25 +132,12 @@ class _LoginState extends State<Login> {
                   height: 10,
                 ),
                 ChangeScreen(
-                    name: "Đăng kí",
-                    whichAccount: "Bạn chưa có tài khoản !",
+                    name: "Đăng nhập",
+                    whichAccount: "Bạn đã có tài khoản !",
                     onTap: () {
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
-                          builder: (ctx) => SignUp(),
-                        ),
-                      );
-                    }),
-                SizedBox(
-                  height: 10,
-                ),
-                ChangeScreen(
-                    name: "Lấy lại",
-                    whichAccount: "Bạn quên mật khẩu !",
-                    onTap: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (ctx) => Forgot(),
+                          builder: (ctx) => Login(),
                         ),
                       );
                     }),

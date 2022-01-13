@@ -3,6 +3,7 @@ import 'package:e_commerce/screens/checkout.dart';
 import 'package:e_commerce/screens/homepage.dart';
 import 'package:e_commerce/widgets/mybutton.dart';
 import 'package:e_commerce/widgets/notification_button.dart';
+import 'package:e_commerce/widgets/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
@@ -13,7 +14,8 @@ class DetailScreen extends StatefulWidget {
   final String image;
   final String name;
   final double price;
-  DetailScreen({this.image, this.name, this.price});
+  final String description;
+  DetailScreen({this.image, this.name, this.price, this.description});
   @override
   _DetailScreenState createState() => _DetailScreenState();
 }
@@ -66,7 +68,7 @@ class _DetailScreenState extends State<DetailScreen> {
             children: <Widget>[
               Text(widget.name, style: myStyle),
               Text(
-                "\$ ${widget.price.toString()}",
+                "${numberFormat(widget.price.toInt())} đ",
                 style: TextStyle(
                     color: Color(0xff9b96d6),
                     fontSize: 18,
@@ -82,11 +84,12 @@ class _DetailScreenState extends State<DetailScreen> {
 
   Widget _buildDiscription() {
     return Container(
-      height: 170,
+      // height: 170,
+
       child: Wrap(
         children: <Widget>[
           Text(
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. ",
+            "${widget.description} ",
             style: TextStyle(fontSize: 16),
           )
         ],
@@ -301,22 +304,25 @@ class _DetailScreenState extends State<DetailScreen> {
             price: widget.price,
             quentity: count,
           );
-          FirebaseFirestore.instance.collection("cart").doc("${ FirebaseAuth.instance.currentUser.uid}").set({
+          FirebaseFirestore.instance
+              .collection("cart")
+              .doc("${FirebaseAuth.instance.currentUser.uid}")
+              .set({
             "Product": productProvider.getCheckOutModelList
                 .map((c) => {
-              "ProductName": c.name,
-              "ProductPrice": c.price,
-              "ProductQuetity": c.quentity,
-              "ProductImage": c.image,
-              "Product Color": c.color,
-              "Product Size": c.size,
-            })
+                      "ProductName": c.name,
+                      "ProductPrice": c.price,
+                      "ProductQuetity": c.quentity,
+                      "ProductImage": c.image,
+                      "Product Color": c.color,
+                      "Product Size": c.size,
+                    })
                 .toList(),
             "TotalPrice": widget.price.toStringAsFixed(2),
             "UserName": productProvider.userModel.userName,
-            "UserEmail":  productProvider.userModel.userEmail,
-            "UserNumber":  productProvider.userModel.userPhoneNumber,
-            "UserAddress":  productProvider.userModel.userAddress,
+            "UserEmail": productProvider.userModel.userEmail,
+            "UserNumber": productProvider.userModel.userPhoneNumber,
+            "UserAddress": productProvider.userModel.userAddress,
             "UserId": FirebaseAuth.instance.currentUser.uid,
           });
           Navigator.of(context).pushReplacement(
@@ -374,6 +380,9 @@ class _DetailScreenState extends State<DetailScreen> {
                   children: <Widget>[
                     _buildNameToDescriptionPart(),
                     _buildDiscription(),
+                    SizedBox(
+                      height: 15,
+                    ),
                     _buildSizePart(),
                     _buildColorPart(),
                     _buildQuentityPart(),
